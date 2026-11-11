@@ -3,7 +3,7 @@
  .money-note{font-size:11px;color:#6c7591;margin:-8px 0 12px} 
 /* تقویم شمسی داخلی */
 .jalali-date{cursor:pointer;text-align:center;font-weight:750;color:#6326c7!important;background:#f6efff!important}.cal-overlay{position:fixed;inset:0;z-index:10020;background:#142139a8;display:none;align-items:center;justify-content:center;padding:12px}.cal-overlay.open{display:flex}.cal-dialog{width:min(100%,390px);max-height:90dvh;overflow:auto;background:white;border-radius:22px;padding:17px;box-shadow:0 16px 60px #0004;color:#18243a}.cal-header{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:15px}.cal-header button{background:#efe2ff;border:0;color:#6326c7;border-radius:12px;padding:10px 15px;font-size:17px}.cal-grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:5px;text-align:center}.cal-weekday{font-size:11px;color:#69758c;padding:8px 0}.cal-day{border:0;background:#f5f6fb;color:#26354a;border-radius:10px;aspect-ratio:1;font-size:14px}.cal-day.today{outline:2px solid #0cb4a3}.cal-day.selected{background:linear-gradient(115deg,#6b25c9,#1b8cb4);color:#fff}.cal-day:disabled{visibility:hidden}.cal-footer{display:flex;gap:8px;margin-top:16px}.cal-footer button{flex:1}
-</style></head><body><div class="app"><header class="hero"><div class="pwa-tools"><button id="installPwa" class="pwa-tool" type="button">⬇ نصب روی گوشی</button><button id="fullScreen" class="pwa-tool" type="button">⛶ نمایش تمام‌صفحه</button></div><div style="font-size:12px;opacity:.85">مدیریت هوشمند مالی خانواده</div><h1>🏡 خانه‌حساب</h1><div class="balance"><span style="font-size:12px">مانده ثبت‌شده</span><strong id="balance">۰</strong><small>تومان</small></div><div class="stats"><div class="stat inc">↗ درآمد<strong id="income">۰</strong></div><div class="stat exp">↘ هزینه<strong id="expense">۰</strong></div><div class="stat chk">▤ چک‌های باز<strong id="checkTotal">۰</strong></div></div></header><main class="main">
+</style></head><body><div class="app"><header class="hero"><div class="pwa-tools"><button id="installPwa" class="pwa-tool" type="button">⬇ نصب روی گوشی</button></div><div style="font-size:12px;opacity:.85">مدیریت هوشمند مالی خانواده</div><h1>🏡 خانه‌حساب</h1><div class="balance"><span style="font-size:12px">مانده ثبت‌شده</span><strong id="balance">۰</strong><small>تومان</small></div><div class="stats"><div class="stat inc">↗ درآمد<strong id="income">۰</strong></div><div class="stat exp">↘ هزینه<strong id="expense">۰</strong></div><div class="stat chk">▤ چک‌های باز<strong id="checkTotal">۰</strong></div></div></header><main class="main">
 <section class="page active" id="home"><div class="flex"><h2>تراکنش‌های اخیر</h2><button class="btn small" data-page="add">＋ تراکنش</button></div><div id="txList"></div><div class="flex"><button class="btn secondary" data-page="banks">🏦 بانک‌ها و پیامک‌ها</button><button class="btn secondary" data-page="checks">📒 چک‌ها</button></div></section>
 <section class="page" id="add"><h2 id="txHeading">ثبت درآمد یا هزینه</h2><div class="seg"><button id="expenseType" data-type="expense">🛒 هزینه</button><button id="incomeType" data-type="income">💳 درآمد</button></div><label class="label">مبلغ (تومان)</label><input class="input" id="amount" type="text" inputmode="numeric" autocomplete="off" dir="ltr" placeholder="مثلاً 1,250,000"><div class="money-note">مبلغ هنگام تایپ، سه‌رقم سه‌رقم جدا می‌شود.</div><label class="label">دسته‌بندی</label><select class="input" id="txCat"></select><label class="label">تاریخ</label><input class="input" id="txDate" type="text" readonly inputmode="none" placeholder="انتخاب تاریخ شمسی" aria-label="انتخاب تاریخ شمسی"><label class="label">توضیحات</label><input class="input" id="txNote" placeholder="اختیاری"><button class="btn green full" id="saveTx">✓ ذخیره تراکنش</button><button class="btn secondary full" style="margin-top:8px" id="cancelEdit">انصراف</button></section>
 <section class="page" id="banks"><div class="flex"><h2>بانک‌های من</h2><button class="btn small" data-page="newBank">＋ افزودن بانک</button></div><div id="bankList"></div><button class="btn full" data-page="sms">✉ شناسایی متن پیامک</button></section>
@@ -68,11 +68,11 @@ setTxType('expense');setCat('expense');resetTx();document.querySelectorAll('butt
 </script><script>
 (function(){
 let installEvent=null;
-const install=document.getElementById('installPwa'),full=document.getElementById('fullScreen'),help=document.getElementById('pwaHelp'),helpText=document.getElementById('pwaHelpText');
+const install=document.getElementById('installPwa'),help=document.getElementById('pwaHelp'),helpText=document.getElementById('pwaHelpText');
 const ios=/iPad|iPhone|iPod/.test(navigator.userAgent),standalone=()=>window.matchMedia('(display-mode: standalone)').matches||window.matchMedia('(display-mode: fullscreen)').matches||navigator.standalone===true;
 function guide(message){helpText.textContent=message;help.classList.add('open')}
 document.getElementById('closePwaHelp').onclick=()=>help.classList.remove('open');help.addEventListener('click',e=>{if(e.target===help)help.classList.remove('open')});
-function update(){install.hidden=standalone();full.textContent=document.fullscreenElement?'⛶ خروج از تمام‌صفحه':'⛶ نمایش تمام‌صفحه'}
+function update(){install.hidden=standalone()}
 window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();installEvent=e;update()});
 window.addEventListener('appinstalled',()=>{installEvent=null;update()});
 install.addEventListener('click',async()=>{
@@ -81,9 +81,6 @@ install.addEventListener('click',async()=>{
  if(ios){guide('در مرورگر Safari روی دکمه اشتراک‌گذاری (Share) بزن و «Add to Home Screen / افزودن به صفحه اصلی» را انتخاب کن. سپس برنامه را از آیکن صفحه اصلی باز کن.');return}
  guide('برای نصب، برنامه را با آدرس HTTPS در Chrome یا مرورگر سازگار باز کن. سپس منوی مرورگر (سه‌نقطه) ← «Install app / نصب برنامه» یا «Add to Home screen» را انتخاب کن. اگر فایل HTML را مستقیم باز کرده‌ای، ابتدا کل پوشه برنامه را روی هاست HTTPS قرار بده.');
 });
-full.addEventListener('click',async()=>{
- try{if(document.fullscreenElement){await document.exitFullscreen()}else if(document.documentElement.requestFullscreen){await document.documentElement.requestFullscreen()}else{guide('مرورگر فعلی اجازه تمام‌صفحه‌کردن صفحه وب را نمی‌دهد. برنامه را از طریق «نصب روی گوشی» به صفحه اصلی اضافه کن و از آیکن برنامه باز کن.')}}catch(err){guide('مرورگر اجازه حالت تمام‌صفحه نداد. پس از نصب برنامه از صفحه اصلی گوشی آن را اجرا کن.')}update()
-});
-document.addEventListener('fullscreenchange',update);update();
+update();
 })();
 </script></body></html>
